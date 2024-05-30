@@ -1,0 +1,33 @@
+from ultralytics import YOLO
+import cv2
+
+model = YOLO("yolov8m.pt")
+kamera = cv2.VideoCapture(0)
+font = cv2.FONT_HERSHEY_SIMPLEX
+
+while True:  
+    ret, kare = kamera.read()
+    
+    if not ret:
+        break
+    imgs = cv2.cvtColor(kare, cv2.COLOR_BGR2RGB)
+    results = model(imgs, verbose=False) 
+    
+    for i in range(len(results[0].boxes)):
+        x1, y1, x2, y2 = results[0].boxes.xyxy[i]
+        score = results[0].boxes.conf[i]
+        x1, y1, x2, y2, score = int(x1), int(y1), int(x2), int(y2), float(score)
+        if score < 0.5:
+            continue
+
+        cv2.rectangle(kare, (x1, y1), (x2, y2), (255, 0, 0), 2)
+        text = f"{name} {score:.2f}"
+        cv2.putText(kare, text, (x1, y1-10), font, 1.2, (255, 0, 255), 2)
+
+    cv2.imshow("kamera", kare)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+kamera.release()
+cv2.destroyAllWindows()
