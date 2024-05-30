@@ -21,7 +21,7 @@ while True:
             continue
 
         cv2.rectangle(kare, (x1, y1), (x2, y2), (255, 0, 0), 2)
-        text = f"{name} {score:.2f}"
+        text = f"{score:.2f}"
         cv2.putText(kare, text, (x1, y1-10), font, 1.2, (255, 0, 255), 2)
 
     cv2.imshow("kamera", kare)
